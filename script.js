@@ -30,7 +30,15 @@ function getIngredients() {
   // 3. Resolve with "Ingredients ready"
 
   return new Promise((resolve, reject) => {
-    // Your code here
+    const success = true;
+    if (success) {
+      showMessage("Gathering ingredients...");
+      wait(2000);
+      resolve("Ingredients ready");
+    }
+    else {
+      reject("Something went wrong");
+    }
   });
 }
 
@@ -43,7 +51,24 @@ function blendSmoothie() {
   // 4. Otherwise resolve with "Smoothie blended"
 
   return new Promise((resolve, reject) => {
-    // Your code here
+    // 30% chance of failure
+    success = true;
+    value = Math.random(10);
+    if (value > 2) {
+      success = true;
+    }
+    else {
+      success = false;
+    }
+    // do the stuff in TODO
+    if (success) {
+      showMessage("Blending smoothie...");
+      wait(3000);
+      resolve("Smoothie blended");
+    }
+    else {
+      reject("ERROR: Blender broke!");
+    }
   });
 }
 
@@ -55,7 +80,15 @@ function pourSmoothie() {
   // 3. Resolve with "Smoothie is ready!"
 
   return new Promise((resolve, reject) => {
-    // Your code here
+    const success = true;
+    if (success) {
+      showMessage("Pouring into cup...");
+      wait(1000);
+      resolve("Smoothie is ready!");
+    }
+    else {
+      reject("Something went wrong");
+    }
   });
 }
 
@@ -67,11 +100,11 @@ function makeSmoothieWithPromises() {
   outputDiv.innerHTML = ""; // Clear previous messages
 
   // TODO: Chain the steps in order using .then()
-  // getIngredients()
-  //   .then(...)
-  //   .then(...)
-  //   .then(...)
-  //   .catch(...)
+  getIngredients()
+     .then(blendSmoothie())
+     .then(pourSmoothie())
+     //.then(...)
+     .catch(error => console.error(error))
 }
 
 /* =========================
@@ -87,5 +120,29 @@ async function makeSmoothieAsync() {
   // await blendSmoothie()
   // await pourSmoothie()
   // Show final success message
+  try {
+    await getIngredients();
+/*  
+    response = await fetch(getIngredients());
+    text = await response.text();
+    showMessage(text);
+    wait(2000);
+    response = await fetch(blendSmoothie());
+    text = await response.text();
+    showMessage(text);
+    wait(2000);
+    response = await fetch(pourSmoothie());
+    text = await response.text();
+    showMessage(text);
+    wait(2000);
+ */
+  }
   // Catch and display any errors
+  catch (reject) {
+    showMessage(reject);
+  }
+
 }
+
+makeSmoothieAsync();
+//makeSmoothieWithPromises();
