@@ -30,17 +30,14 @@ function getIngredients() {
   // 3. Resolve with "Ingredients ready"
 
   return new Promise((resolve, reject) => {
-    const success = true;
-    if (success) {
-      showMessage("Gathering ingredients...");
-      wait(2000);
-      resolve("Ingredients ready");
+    showMessage("Gathering ingredients...");
+    wait(2000)
+      .then(() =>
+        resolve("Ingredients ready"));
     }
-    else {
-      reject("Something went wrong");
-    }
-  });
+  )
 }
+
 
 // Step 2: Blend smoothie
 function blendSmoothie() {
@@ -53,7 +50,8 @@ function blendSmoothie() {
   return new Promise((resolve, reject) => {
     // 30% chance of failure
     success = true;
-    value = Math.random(10);
+    value = Math.random()*10;
+    //showMessage(value);
     if (value > 2) {
       success = true;
     }
@@ -63,11 +61,15 @@ function blendSmoothie() {
     // do the stuff in TODO
     if (success) {
       showMessage("Blending smoothie...");
-      wait(3000);
-      resolve("Smoothie blended");
+      wait(3000)
+        .then(() =>
+          resolve("Smoothie blended"));
     }
     else {
-      reject("ERROR: Blender broke!");
+      showMessage("Blending smoothie...");
+      wait(3000)
+        .then(() =>
+          reject("ERROR: Blender broke!"));
     }
   });
 }
@@ -80,17 +82,14 @@ function pourSmoothie() {
   // 3. Resolve with "Smoothie is ready!"
 
   return new Promise((resolve, reject) => {
-    const success = true;
-    if (success) {
-      showMessage("Pouring into cup...");
-      wait(1000);
-      resolve("Smoothie is ready!");
+    showMessage("Pouring into cup...");
+    wait(1000)
+      .then(() =>
+        resolve("Smoothie is ready!"));
     }
-    else {
-      reject("Something went wrong");
-    }
-  });
+  )
 }
+
 
 /* =========================
    PART 2 — PROMISE CHAIN VERSION
@@ -101,10 +100,18 @@ function makeSmoothieWithPromises() {
 
   // TODO: Chain the steps in order using .then()
   getIngredients()
-     .then(blendSmoothie())
-     .then(pourSmoothie())
-     //.then(...)
-     .catch(error => console.error(error))
+    .then((result) => 
+      showMessage(result))
+    .then(() => 
+      blendSmoothie())
+    .then((result) =>
+      showMessage(result))
+      .then(() => 
+          pourSmoothie())
+      .then((result) =>
+        showMessage(result))
+    .catch((reject) => 
+      showMessage(reject))
 }
 
 /* =========================
@@ -121,7 +128,12 @@ async function makeSmoothieAsync() {
   // await pourSmoothie()
   // Show final success message
   try {
-    await getIngredients();
+    text = await getIngredients();
+    showMessage(text);
+    text = await blendSmoothie();
+    showMessage(text);
+    text = await pourSmoothie();
+    showMessage(text);
 /*  
     response = await fetch(getIngredients());
     text = await response.text();
@@ -144,5 +156,5 @@ async function makeSmoothieAsync() {
 
 }
 
-makeSmoothieAsync();
+//makeSmoothieAsync();
 //makeSmoothieWithPromises();
